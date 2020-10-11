@@ -1,19 +1,24 @@
 #ifndef ECONOMY_H
 #define ECONOMY_H
 
+#include <iostream>
 #include "person.h"
+
+using namespace std;
 class Economy
 {
 
 public:
     Economy(const int size, const int connection_size);
+    void info();
 
 private:
+
     void run();
 
     void createPeople();
 
-    Person *createPerson() const;
+    static Person *createPerson() ;
 
     void createConnections();
 

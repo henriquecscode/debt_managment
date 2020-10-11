@@ -1,35 +1,40 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <iostream>
 #include <vector>
-
+#include <random>
 
 using namespace std;
 
 
 class Node;
 
-struct Connection{
+struct Connection {
 
-    Node * connection;
+    Node *connection;
     unsigned int weight;
 };
 
-class Node{
+class Node {
 
     unsigned int debt = 0, profit = 0;
     vector<Connection *> entries, exits;
-    public:
-        Node(){
-        }
+public:
+    Node() {
+    }
 
-        Node * addEntry(Connection * entry);
+    void info();
 
-        Node *addExit(Connection *exit);
+    Node *addEntry(Connection *entry);
 
-        unsigned int getDebt() const;
+    Node *addExit(Connection *exit);
 
-        unsigned int getProfit() const;
+    unsigned int getDebt() const;
+
+    unsigned int getProfit() const;
+
+    int getNetProfit() const;
 };
 
 

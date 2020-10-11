@@ -2,6 +2,13 @@
 
 using namespace std;
 
+void Node::info() {
+    cout << entries.size() << " entries\n";
+    cout << profit << " profit\n";
+    cout << exits.size() << " exits\n";
+    cout << debt << " debt\n";
+    cout << getNetProfit() << " net profit\n";
+}
 Node * Node::addEntry(Connection *entry)
 {
     profit += entry->weight;
@@ -22,4 +29,8 @@ unsigned int Node::getDebt() const{
 
 unsigned int Node::getProfit() const{
     return profit;
+}
+
+int Node::getNetProfit() const {
+    return profit - debt;
 }

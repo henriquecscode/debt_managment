@@ -9,6 +9,12 @@ Person::Person() : Node()
     person_number += 1;
 }
 
+void Person::info() {
+    cout << "\nPerson " << getNameFromNumber() << '\n';
+    Node::info();
+
+}
+
 string Person::getNameFromNumber()
 {
     string name = "";

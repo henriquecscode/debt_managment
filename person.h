@@ -3,18 +3,24 @@
 
 #include "graph.h"
 #include <string>
+#include <iostream>
 
-class Person : public Node
-{
+using namespace std;
+
+class Person : public Node {
+    static unsigned int person_number;
+
 public:
 
     Person();
 
-private:
-    static unsigned int person_number;
-    string name;
+    void info();
 
     string getNameFromNumber();
+
+private:
+    string name;
+
 };
 
 #endif // !PERSON_H

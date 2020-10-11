@@ -9,6 +9,13 @@ Economy::Economy(const int size, const int connection_size)
     createConnections();
 }
 
+void Economy::info() {
+    cout << size << " people\n";
+    cout << connection_size << " connections\n";
+    for(auto person: people){
+        person ->info();
+    }
+}
 void Economy::run()
 {
 }
@@ -21,7 +28,7 @@ void Economy::createPeople()
     }
 }
 
-Person *Economy::createPerson() const
+Person *Economy::createPerson()
 {
     return new Person();
 }
@@ -44,6 +51,8 @@ void Economy::createConnections()
         p1->addExit(&p1top2);
         p2->addEntry(&p2fromp1);
 
+        initial_debt += money;
+
     }
 }
 
@@ -53,9 +62,12 @@ Person *Economy::getPerson() const
 }
 unsigned int Economy::getMoneySize() const
 {
-    unsigned int money;
-    do{
-    }while(money < 1 || money > 100000000);
+    unsigned int number1, number2;
+
+    number1 = (rand() % 1000) + 10;
+    number2 = (rand() % 1000) + 10;
+
+    return number1 * number2; // Money between 100 and 1009 * 1009
 }
 
 void Economy::randomizeEconomy()
