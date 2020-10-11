@@ -12,6 +12,7 @@ Economy::Economy(const int size, const int connection_size)
 void Economy::info() {
     cout << size << " people\n";
     cout << connection_size << " connections\n";
+    cout << getTrueConnections() << " true connections\n";
     for(auto person: people){
         person ->info();
     }
@@ -68,6 +69,15 @@ unsigned int Economy::getMoneySize() const
     number2 = (rand() % 1000) + 10;
 
     return number1 * number2; // Money between 100 and 1009 * 1009
+}
+
+unsigned int Economy::getTrueConnections() const {
+    unsigned int connections = 0;
+    for(auto person: people){
+        connections += person->getNumberExits();
+        connections += person->getNumberEntries();
+    }
+    return connections/2;
 }
 
 void Economy::randomizeEconomy()

@@ -26,6 +26,8 @@ private:
 
     unsigned int getMoneySize() const;
 
+    unsigned int getTrueConnections() const;
+
     Person *getPerson() const;
 
     void randomizeEconomy();

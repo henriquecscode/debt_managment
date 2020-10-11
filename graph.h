@@ -35,6 +35,10 @@ public:
     unsigned int getProfit() const;
 
     int getNetProfit() const;
+
+    int getNumberExits() const;
+
+    int getNumberEntries() const;
 };
 
 

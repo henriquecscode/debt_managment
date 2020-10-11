@@ -34,3 +34,11 @@ unsigned int Node::getProfit() const{
 int Node::getNetProfit() const {
     return profit - debt;
 }
+
+int Node::getNumberExits() const {
+    return exits.size();
+}
+
+int Node::getNumberEntries() const {
+    return entries.size();
+}
