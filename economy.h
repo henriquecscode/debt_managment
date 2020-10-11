@@ -11,10 +11,9 @@ class Economy
 public:
     Economy(const int size, const int connection_size);
     void info();
+    void runEconomy();
 
 private:
-
-    void run();
 
     void createPeople();
 
@@ -22,15 +21,12 @@ private:
 
     void createConnections();
 
-    void processEconomy();
 
     unsigned int getMoneySize() const;
 
     unsigned int getTrueConnections() const;
 
     Person *getPerson() const;
-
-    void randomizeEconomy();
 
     void transposeDebt(); //A to B to C transforms i A to C
 

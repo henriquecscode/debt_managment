@@ -30,6 +30,8 @@ int main() {
     srand(time(NULL));
     Economy economy(POP_SIZE, CONNECTION_SIZE);
     economy.info();
+    economy.runEconomy();
+    economy.info();
     char x;
     cin >> x;
 }

@@ -10,6 +10,7 @@ Economy::Economy(const int size, const int connection_size)
 }
 
 void Economy::info() {
+    cout << "\n\n";
     cout << size << " people\n";
     cout << connection_size << " connections\n";
     cout << getTrueConnections() << " true connections\n";
@@ -17,8 +18,9 @@ void Economy::info() {
         person ->info();
     }
 }
-void Economy::run()
-{
+
+void Economy::runEconomy() {
+    return;
 }
 
 void Economy::createPeople()
@@ -78,10 +80,6 @@ unsigned int Economy::getTrueConnections() const {
         connections += person->getNumberEntries();
     }
     return connections/2;
-}
-
-void Economy::randomizeEconomy()
-{
 }
 
 void Economy::transposeDebt()
