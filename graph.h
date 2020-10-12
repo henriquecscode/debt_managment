@@ -19,16 +19,16 @@ struct Connection {
 class Node {
 
     unsigned int debt = 0, profit = 0;
-    vector<Connection *> entries, exits;
+    vector<Connection> entries, exits;
 public:
     Node() {
     }
 
     void info();
 
-    Node *addEntry(Connection *entry);
+    Node *addEntry(Connection entry);
 
-    Node *addExit(Connection *exit);
+    Node *addExit(Connection exit);
 
     unsigned int getDebt() const;
 
@@ -39,6 +39,10 @@ public:
     int getNumberExits() const;
 
     int getNumberEntries() const;
+
+    void mergeSameExits();
+
+    void mergeSameEntries();
 };
 
 

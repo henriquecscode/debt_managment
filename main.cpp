@@ -8,7 +8,7 @@ using namespace std;
 
 
 const int POP_SIZE = 10;
-const int CONNECTION_SIZE = 50;
+const int CONNECTION_SIZE = 90;
 
 string function(int i) {
 

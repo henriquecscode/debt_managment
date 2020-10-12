@@ -5,28 +5,31 @@
 #include "person.h"
 
 using namespace std;
-class Economy
-{
+
+class Economy {
 
 public:
     Economy(const int size, const int connection_size);
+
     void info();
+
     void runEconomy();
 
 private:
 
     void createPeople();
 
-    static Person *createPerson() ;
+    static Person *createPerson();
 
     void createConnections();
-
 
     unsigned int getMoneySize() const;
 
     unsigned int getTrueConnections() const;
 
     Person *getPerson() const;
+
+    void mergeSameConnections();
 
     void transposeDebt(); //A to B to C transforms i A to C
 
