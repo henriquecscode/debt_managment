@@ -37,6 +37,8 @@ private:
 
     void mergeSameConnections();
 
+    void nulifyMutualDebt();
+
     void transposeDebt(); //A to B to C transforms i A to C
 
     unsigned int initial_debt = 0;

@@ -100,5 +100,11 @@ void Economy::mergeSameConnections() {
     }
 }
 
+void Economy::nulifyMutualDebt() {
+    for(auto person: people){
+        person->nulifyMutualDebt();
+    }
+}
+
 void Economy::transposeDebt() {
 }
