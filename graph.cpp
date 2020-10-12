@@ -108,7 +108,7 @@ void Node::nulifyMutualDebt() {
             if (it->weight > other_weight) {
                 // We owe more than he owes us. He no longer owes
                 other_node.diminishConnectionWeight(it, other_weight);
-                diminishConnectionWeight(others_exit_connection, it->weight);
+                diminishConnectionWeight(others_exit_connection, other_weight);
 
             } else if (it->weight == other_weight) {
                 //Nice! We can nulify all debt!
@@ -119,7 +119,7 @@ void Node::nulifyMutualDebt() {
             } else { // it->weight < other_weight
                 // He owes us more! We no longer owe
 
-                other_node.diminishConnectionWeight(it, other_weight);
+                other_node.diminishConnectionWeight(it, it->weight);
                 diminishConnectionWeight(others_exit_connection, it->weight);
                 it -= 1;
 
@@ -138,22 +138,24 @@ bool Node::diminishConnectionWeight(
     if (connection->weight < to_diminish) {
         return false;
     }
-    if (connection->weight == to_diminish) {
-        //return false;
-        //Don't know if that works
-        if (connection >= exits.begin() && connection < exits.end()) {
-            //iterator to an exit
-            exits.erase(connection);
-            return true;
-        }
 
-        if (connection >= entries.begin() && connection < entries.end()) {
-            //iterator to an entry
-            entries.erase(connection);
-            return true;
+    connection->weight -= to_diminish; //Diminish the weight
+
+    if (connection >= exits.begin() && connection < exits.end()) {
+        // iterator to an exit. Alter the exit
+        debt -= to_diminish; // The debt diminishes
+        if (connection->weight == 0) { // The value of the connection is now 0
+            exits.erase(connection);
         }
+        return true;
     }
 
-    connection->weight -= to_diminish;
-    return true;
+    if (connection >= entries.begin() && connection < entries.end()) {
+        // iterator to an entry. Alter the entry
+        profit -= to_diminish; // The profit diminishes
+        if (connection->weight == 0) { // The value of the connection is now 0
+            entries.erase(connection);
+        }
+        return true;
+    }
 }
