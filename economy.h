@@ -29,6 +29,10 @@ private:
 
     unsigned int getTrueConnections() const;
 
+    unsigned int getDebt() const;
+
+    unsigned int getProfit() const;
+
     Person *getPerson() const;
 
     void mergeSameConnections();
