@@ -2,14 +2,16 @@
 #define ECONOMY_H
 
 #include <iostream>
+#include <random>
 #include "person.h"
+
 
 using namespace std;
 
 class Economy {
 
 public:
-    Economy(const int size, const int connection_size);
+    Economy(int size, int connection_size);
 
     void info();
 
@@ -23,7 +25,7 @@ private:
 
     void createConnections();
 
-    unsigned int getMoneySize() const;
+    static unsigned int getMoneySize() ;
 
     unsigned int getTrueConnections() const;
 

@@ -20,7 +20,6 @@ void Economy::info() {
 
 void Economy::runEconomy() {
     mergeSameConnections();
-    return;
 }
 
 void Economy::createPeople() {
@@ -34,8 +33,6 @@ Person *Economy::createPerson() {
 }
 
 void Economy::createConnections() {
-    Connection *p1top2;
-    Connection *p2fromp1;
     for (int i = 0; i < connection_size; i++) {
         Person *p1 = getPerson();
         Person *p2;
@@ -55,7 +52,7 @@ void Economy::createConnections() {
     }
 }
 
-unsigned int Economy::getMoneySize() const {
+unsigned int Economy::getMoneySize() {
     unsigned int number1, number2;
 
     number1 = (rand() % 1000) + 10;
