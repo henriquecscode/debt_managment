@@ -10,7 +10,7 @@ Person::Person() : Node()
 }
 
 void Person::info() {
-    cout << "\nPerson " << getNameFromNumber() << '\n';
+    cout << "\nPerson " << name << '\n';
     Node::info();
 
 }
@@ -28,6 +28,5 @@ string Person::getNameFromNumber()
     }
     char_code = number % 26;
     name = char(char('a') + char_code) + name;
-    number = number / 26;
     return name;
 }
