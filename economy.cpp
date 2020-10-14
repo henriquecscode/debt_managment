@@ -36,22 +36,26 @@ Person *Economy::createPerson() {
 
 void Economy::createConnections() {
     for (int i = 0; i < connection_size; i++) {
-        Person *p1 = getPerson();
+        Person *p1 = getRandomPerson();
         Person *p2;
         do {
-            p2 = getPerson();
+            p2 = getRandomPerson();
         } while (p2 == p1);
         unsigned int money = getMoneySize();
 
-        Connection p1top2 = {p2, money};
-        Connection p2fromp1 = {p1, money};
-
-        p1->addExit(p1top2);
-        p2->addEntry(p2fromp1);
-
-        initial_debt += money;
+        createConnection(p1, p2, money);
 
     }
+}
+
+void Economy::createConnection(Person *p1, Person *p2, unsigned int money) {
+    Connection p1top2 = {p2, money};
+    Connection p2fromp1 = {p1, money};
+
+    p1->addExit(p1top2);
+    p2->addEntry(p2fromp1);
+
+    initial_debt += money;
 }
 
 unsigned int Economy::getMoneySize() {
@@ -88,7 +92,7 @@ unsigned int Economy::getProfit() const {
     return profit;
 }
 
-Person *Economy::getPerson() const {
+Person *Economy::getRandomPerson() const {
     return people[rand() % size];
 }
 
@@ -101,7 +105,7 @@ void Economy::mergeSameConnections() {
 }
 
 void Economy::nulifyMutualDebt() {
-    for(auto person: people){
+    for (auto person: people) {
         person->nulifyMutualDebt();
     }
 }

@@ -25,6 +25,8 @@ private:
 
     void createConnections();
 
+    void createConnection(Person* p1, Person* p2, unsigned int money);
+
     static unsigned int getMoneySize() ;
 
     unsigned int getTrueConnections() const;
@@ -33,7 +35,7 @@ private:
 
     unsigned int getProfit() const;
 
-    Person *getPerson() const;
+    Person *getRandomPerson() const;
 
     void mergeSameConnections();
 
