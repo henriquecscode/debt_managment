@@ -76,7 +76,7 @@ void Node::mergeSameExits() {
     for (auto it = exits.begin(); it != exits.end(); it++) {
         for (auto it2 = exits.begin(); it2 != exits.end(); it2++) {
             if ((*it2).connection == (*it).connection && it != it2) { //We can merge an exit
-                (*it).weight += 1;
+                (*it).weight += (*it2).weight;
                 exits.erase(it2);
                 it2 -= 1;
             }
@@ -88,7 +88,7 @@ void Node::mergeSameEntries() {
     for (auto it = entries.begin(); it != entries.end(); it++) {
         for (auto it2 = entries.begin(); it2 != entries.end(); it2++) {
             if ((*it2).connection == (*it).connection && it != it2) { //We can merge an exit
-                (*it).weight += 1;
+                (*it).weight += (*it2).weight;
                 entries.erase(it2);
                 it2 -= 1;
             }
