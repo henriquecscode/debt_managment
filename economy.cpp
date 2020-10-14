@@ -4,8 +4,6 @@ Economy::Economy(const int size, const int connection_size) {
     this->size = size;
     this->connection_size = connection_size;
 
-    createPeople();
-    createConnections();
 }
 
 void Economy::info() {
@@ -24,6 +22,12 @@ void Economy::runEconomy() {
     mergeSameConnections();
 }
 
+void Economy::createRandomEconomy() {
+
+    createPeople();
+    createRandomConnections();
+}
+
 void Economy::createPeople() {
     for (int i = 0; i < size; i++) {
         people.push_back(createPerson());
@@ -34,14 +38,14 @@ Person *Economy::createPerson() {
     return new Person();
 }
 
-void Economy::createConnections() {
+void Economy::createRandomConnections() {
     for (int i = 0; i < connection_size; i++) {
         Person *p1 = getRandomPerson();
         Person *p2;
         do {
             p2 = getRandomPerson();
         } while (p2 == p1);
-        unsigned int money = getMoneySize();
+        unsigned int money = createRandomMoneySize();
 
         createConnection(p1, p2, money);
 
@@ -55,10 +59,10 @@ void Economy::createConnection(Person *p1, Person *p2, unsigned int money) {
     p1->addExit(p1top2);
     p2->addEntry(p2fromp1);
 
-    initial_debt += money;
+    initial_debt += money; // createdConnections (independtly of time of creation) always count to initial debt
 }
 
-unsigned int Economy::getMoneySize() {
+unsigned int Economy::createRandomMoneySize() {
     unsigned int number1, number2;
 
     number1 = (rand() % 1000) + 10;

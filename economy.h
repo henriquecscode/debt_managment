@@ -17,17 +17,11 @@ public:
 
     void runEconomy();
 
-private:
-
-    void createPeople();
-
-    static Person *createPerson();
-
-    void createConnections();
+    void createRandomEconomy();
 
     void createConnection(Person* p1, Person* p2, unsigned int money);
 
-    static unsigned int getMoneySize() ;
+    static Person *createPerson();
 
     unsigned int getTrueConnections() const;
 
@@ -36,6 +30,14 @@ private:
     unsigned int getProfit() const;
 
     Person *getRandomPerson() const;
+
+private:
+
+    void createPeople();
+
+    void createRandomConnections();
+
+    static unsigned int createRandomMoneySize() ;
 
     void mergeSameConnections();
 
