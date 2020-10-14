@@ -60,7 +60,7 @@ Node::getExitConnectionToNode(Node *node) {
     //https://stackoverflow.com/a/15518039
 
     return find_if(exits.begin(), exits.end(),
-                   [node](const Connection &exit_connection) { exit_connection.connection == node; });
+                   [node](const Connection &exit_connection) { return exit_connection.connection == node; });
 }
 
 __gnu_cxx::__normal_iterator<Connection *, vector<Connection, allocator<Connection>>>
@@ -68,7 +68,7 @@ Node::getEntryConnectionToNode(Node *node) {
     //https://stackoverflow.com/a/15518039
 
     return find_if(entries.begin(), entries.end(),
-                   [node](const Connection &entry_connection) { entry_connection.connection == node; });
+                   [node](const Connection &entry_connection) { return entry_connection.connection == node; });
 }
 
 
@@ -158,4 +158,5 @@ bool Node::diminishConnectionWeight(
         }
         return true;
     }
+    return false;
 }
