@@ -1,11 +1,5 @@
 #include "economy.h"
 
-Economy::Economy(const int size, const int connection_size) {
-    this->size = size;
-    this->connection_size = connection_size;
-
-}
-
 void Economy::info() {
     cout << "\n\n";
     cout << size << " people\n";
@@ -22,23 +16,25 @@ void Economy::runEconomy() {
     mergeSameConnections();
 }
 
-void Economy::createRandomEconomy() {
-
-    createPeople();
-    createRandomConnections();
+void Economy::createRandomEconomy(int size, int connection_size) {
+    createPeople(size);
+    createRandomConnections(connection_size);
 }
 
-void Economy::createPeople() {
+void Economy::createPeople(int size) {
     for (int i = 0; i < size; i++) {
-        people.push_back(createPerson());
+        createPerson();
     }
 }
 
 Person *Economy::createPerson() {
-    return new Person();
+    Person *p = new Person();
+    people.push_back(p);
+    size += 1;
+    return p;
 }
 
-void Economy::createRandomConnections() {
+void Economy::createRandomConnections(int connection_size) {
     for (int i = 0; i < connection_size; i++) {
         Person *p1 = getRandomPerson();
         Person *p2;
@@ -60,6 +56,7 @@ void Economy::createConnection(Person *p1, Person *p2, unsigned int money) {
     p2->addEntry(p2fromp1);
 
     initial_debt += money; // createdConnections (independtly of time of creation) always count to initial debt
+    connection_size += 1;
 }
 
 unsigned int Economy::createRandomMoneySize() {

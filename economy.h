@@ -11,17 +11,16 @@ using namespace std;
 class Economy {
 
 public:
-    Economy(int size, int connection_size);
 
     void info();
 
     void runEconomy();
 
-    void createRandomEconomy();
+    void createRandomEconomy(int size, int connection_size);
 
     void createConnection(Person* p1, Person* p2, unsigned int money);
 
-    static Person *createPerson();
+    Person *createPerson();
 
     unsigned int getTrueConnections() const;
 
@@ -33,9 +32,9 @@ public:
 
 private:
 
-    void createPeople();
+    void createPeople(int size);
 
-    void createRandomConnections();
+    void createRandomConnections(int connection_size);
 
     static unsigned int createRandomMoneySize() ;
 
