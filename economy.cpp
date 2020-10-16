@@ -14,6 +14,7 @@ void Economy::info() {
 
 void Economy::runEconomy() {
     mergeSameConnections();
+    nulifyMutualDebt();
 }
 
 void Economy::createRandomEconomy(int size, int connection_size) {

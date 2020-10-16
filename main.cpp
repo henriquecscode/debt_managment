@@ -26,13 +26,43 @@ string function(int i) {
     return name;
 }
 
-int main() {
-    srand(time(NULL));
+
+void test1() {
     Economy economy;
-    economy.createRandomEconomy(POP_SIZE, CONNECTION_SIZE);
+    Person *a = economy.createPerson();
+    Person *b = economy.createPerson();
+    Person *c = economy.createPerson();
+
+    economy.createConnection(a, b, 10);
+    economy.createConnection(a, b, 20);
+    economy.createConnection(a, c, 30);
+    economy.createConnection(a, c, 20);
+    economy.createConnection(a, b, 20);
     economy.info();
     economy.runEconomy();
     economy.info();
-    char x;
-    cin >> x;
+}
+
+void test2() {
+    Economy economy;
+    Person *a = economy.createPerson();
+    Person *b = economy.createPerson();
+    Person *c = economy.createPerson();
+    Person *d = economy.createPerson();
+    economy.createConnection(a, b, 10);
+    economy.createConnection(a, b, 20);
+    economy.createConnection(a, c, 30);
+    economy.createConnection(a, c, 20);
+    economy.createConnection(a, b, 20);
+    economy.createConnection(a, d, 10);
+    economy.createConnection(b, a, 20);
+    economy.createConnection(c, a, 50);
+    economy.info();
+    economy.runEconomy();
+    economy.info();
+}
+
+int main() {
+    test2();
+    return 0;
 }

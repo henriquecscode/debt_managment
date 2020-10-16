@@ -100,27 +100,37 @@ void Node::nulifyMutualDebt() {
 
     // Run the exits and see if any of them has an exit to this node
     for (auto it = exits.begin(); it != exits.end(); it++) {
-        Node other_node = *it->connection;
-        if (other_node.hasEntryNode(this)) {
-            auto others_exit_connection = other_node.getExitConnectionToNode(this);
+        Node *other_node = (it->connection);
+
+        if (other_node->hasExitNode(this)) {
+            auto others_exit_connection = other_node->getExitConnectionToNode(this);
+            auto others_entry_connection = other_node->getEntryConnectionToNode(this);
+            unsigned int this_weight = it->weight;
             unsigned int other_weight = others_exit_connection->weight;
             // They have an exit to each other
-            if (it->weight > other_weight) {
+            if (this_weight > other_weight) {
                 // We owe more than he owes us. He no longer owes
-                other_node.diminishConnectionWeight(it, other_weight);
-                diminishConnectionWeight(others_exit_connection, other_weight);
+                other_node->diminishConnectionWeight(others_exit_connection, other_weight);
+                other_node->diminishConnectionWeight(others_entry_connection, other_weight);
+                diminishConnectionWeight(it, other_weight);
+                diminishConnectionWeight(getEntryConnectionToNode(other_node), other_weight);
 
-            } else if (it->weight == other_weight) {
+            } else if (this_weight == other_weight) {
                 //Nice! We can nulify all debt!
-                other_node.diminishConnectionWeight(it, other_weight);
-                diminishConnectionWeight(others_exit_connection, it->weight);
+                other_node->diminishConnectionWeight(others_exit_connection, other_weight);
+                other_node->diminishConnectionWeight(others_entry_connection, other_weight);
+                diminishConnectionWeight(it, this_weight);
+                diminishConnectionWeight(getEntryConnectionToNode(other_node), this_weight);
                 it -= 1; // We erase this connection from the exits vector
 
-            } else { // it->weight < other_weight
+            } else { // this_weight < other_weight
                 // He owes us more! We no longer owe
 
-                other_node.diminishConnectionWeight(it, it->weight);
-                diminishConnectionWeight(others_exit_connection, it->weight);
+                other_node->diminishConnectionWeight(others_exit_connection, this_weight);
+                other_node->diminishConnectionWeight(others_entry_connection, this_weight);
+                diminishConnectionWeight(it, this_weight);
+                diminishConnectionWeight(getEntryConnectionToNode(other_node), this_weight);
+
                 it -= 1;
 
             }
@@ -128,6 +138,7 @@ void Node::nulifyMutualDebt() {
             // Note: The last two cases could just be an else. They do the same provided that the diminishConnectionWeight can properly eliminate the connection from the respective exits or entries vector
             // They are also the both that need the iterator to decrease for the next iteration
         }
+
     }
 
 }
@@ -140,6 +151,9 @@ bool Node::diminishConnectionWeight(
     }
 
     connection->weight -= to_diminish; //Diminish the weight
+    // Didn't work
+
+    //Also, didn't detect connection as belonging to any of the vectors
 
     if (connection >= exits.begin() && connection < exits.end()) {
         // iterator to an exit. Alter the exit

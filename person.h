@@ -6,7 +6,6 @@
 #include <iostream>
 
 using namespace std;
-
 class Person : public Node {
     static unsigned int person_number;
 
