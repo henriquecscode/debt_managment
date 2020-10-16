@@ -103,40 +103,23 @@ void Node::nulifyMutualDebt() {
         Node *other_node = (it->connection);
 
         if (other_node->hasExitNode(this)) {
+            // They have an exit to each other
+
             auto others_exit_connection = other_node->getExitConnectionToNode(this);
             auto others_entry_connection = other_node->getEntryConnectionToNode(this);
-            unsigned int this_weight = it->weight;
-            unsigned int other_weight = others_exit_connection->weight;
-            // They have an exit to each other
-            if (this_weight > other_weight) {
-                // We owe more than he owes us. He no longer owes
-                other_node->diminishConnectionWeight(others_exit_connection, other_weight);
-                other_node->diminishConnectionWeight(others_entry_connection, other_weight);
-                diminishConnectionWeight(it, other_weight);
-                diminishConnectionWeight(getEntryConnectionToNode(other_node), other_weight);
+            unsigned int weight_to_change = min(it->weight, others_exit_connection->weight);
+            bool erased_iterator = false;
 
-            } else if (this_weight == other_weight) {
-                //Nice! We can nulify all debt!
-                other_node->diminishConnectionWeight(others_exit_connection, other_weight);
-                other_node->diminishConnectionWeight(others_entry_connection, other_weight);
-                diminishConnectionWeight(it, this_weight);
-                diminishConnectionWeight(getEntryConnectionToNode(other_node), this_weight);
-                it -= 1; // We erase this connection from the exits vector
 
-            } else { // this_weight < other_weight
-                // He owes us more! We no longer owe
+            //Diminish entry and exit connections on both nodes
+            other_node->diminishConnectionWeight(others_exit_connection, weight_to_change);
+            other_node->diminishConnectionWeight(others_entry_connection, weight_to_change);
+            erased_iterator = diminishConnectionWeight(it, weight_to_change); //We might be deleting this connection. If so, iterator needs to be decremeted to properly run next iteration
+            diminishConnectionWeight(getEntryConnectionToNode(other_node), weight_to_change);
 
-                other_node->diminishConnectionWeight(others_exit_connection, this_weight);
-                other_node->diminishConnectionWeight(others_entry_connection, this_weight);
-                diminishConnectionWeight(it, this_weight);
-                diminishConnectionWeight(getEntryConnectionToNode(other_node), this_weight);
-
+            if (erased_iterator) {
                 it -= 1;
-
             }
-
-            // Note: The last two cases could just be an else. They do the same provided that the diminishConnectionWeight can properly eliminate the connection from the respective exits or entries vector
-            // They are also the both that need the iterator to decrease for the next iteration
         }
 
     }
@@ -149,7 +132,7 @@ bool Node::diminishConnectionWeight(
     if (connection->weight < to_diminish) {
         return false;
     }
-
+    bool erased_connection = false;
     connection->weight -= to_diminish; //Diminish the weight
     // Didn't work
 
@@ -160,8 +143,8 @@ bool Node::diminishConnectionWeight(
         debt -= to_diminish; // The debt diminishes
         if (connection->weight == 0) { // The value of the connection is now 0
             exits.erase(connection);
+            erased_connection = true;
         }
-        return true;
     }
 
     if (connection >= entries.begin() && connection < entries.end()) {
@@ -169,8 +152,8 @@ bool Node::diminishConnectionWeight(
         profit -= to_diminish; // The profit diminishes
         if (connection->weight == 0) { // The value of the connection is now 0
             entries.erase(connection);
+            erased_connection = true;
         }
-        return true;
     }
-    return false;
+    return erased_connection;
 }
