@@ -98,7 +98,35 @@ void test5(){
     economy.info();
 }
 
+void test6(){
+    Economy economy;
+    Person *a = economy.createPerson();
+    Person *b = economy.createPerson();
+    Person *c = economy.createPerson();
+    Person *d = economy.createPerson();
+    economy.createConnection(d, b, 5);
+    economy.createConnection(a, b, 10);
+    economy.createConnection(b, c, 20);
+    economy.info();
+    economy.runEconomy();
+    economy.info();
+}
+
+
+void test7(){
+    Economy economy;
+    Person *a = economy.createPerson();
+    Person *b = economy.createPerson();
+    Person *c = economy.createPerson();
+    Person *d = economy.createPerson();
+    economy.createConnection(d, b, 10);
+    economy.createConnection(a, b, 10);
+    economy.createConnection(b, c, 20);
+    economy.info();
+    economy.runEconomy();
+    economy.info();
+}
+
 int main() {
-    test5();
     return 0;
 }
