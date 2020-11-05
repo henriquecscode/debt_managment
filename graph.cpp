@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "economy.h"
 
 using namespace std;
 
@@ -10,16 +11,64 @@ void Node::info() {
     cout << getNetProfit() << " net profit\n";
 }
 
-Node *Node::addEntry(Connection entry) {
+void Node::addEntry(Connection entry) {
     profit += entry.weight;
     entries.push_back(entry);
-    return this;
 }
 
-Node *Node::addExit(Connection exit) {
+void Node::addEntry(Node *n, unsigned int money) {
+    Connection c = {n, money};
+    addEntry(c);
+}
+
+void Node::removeEntry(Connection c) {
+    for (auto it = entries.begin(); it != entries.end(); it++) {
+        if (*it == c) {
+            profit -= c.weight;
+            entries.erase(it);
+            return;
+        }
+    }
+}
+
+void Node::removeEntryTo(Node *n) {
+    for (auto it = entries.begin(); it != entries.end(); it++) {
+        if ((*it).connection == n) {
+            profit -= (*it).weight;
+            entries.erase(it);
+            return;
+        }
+    }
+}
+
+void Node::addExit(Connection exit) {
     debt += exit.weight;
     exits.push_back(exit);
-    return this;
+}
+
+void Node::addExit(Node *n, unsigned int money) {
+    Connection c = {n, money};
+    addExit(c);
+}
+
+void Node::removeExit(Connection c) {
+    for (auto it = exits.begin(); it != exits.end(); it++) {
+        if (*it == c) {
+            debt -= c.weight;
+            exits.erase(it);
+            return;
+        }
+    }
+}
+
+void Node::removeExitTo(Node *n) {
+    for (auto it = exits.begin(); it != exits.end(); it++) {
+        if ((*it).connection == n) {
+            debt -= (*it).weight;
+            exits.erase(it);
+            return;
+        }
+    }
 }
 
 bool Node::connectionToThisNode(Connection *connection) const {
@@ -126,6 +175,54 @@ void Node::nulifyMutualDebt() {
 
 }
 
+void Node::turnToOneWayNode() {
+    unsigned int entry_debt, exit_debt, transfer_size;
+    Node *entry_node, *exit_node;
+    bool erased_entry;
+    Connection new_entry_connection, new_exit_connection;
+    for (auto it = entries.begin(); it != entries.end(); it = entries.begin()) {
+        entry_debt = it->weight;
+        entry_node = it->connection;
+        for (auto it2 = exits.begin(); it2 != exits.end(); it2 = exits.begin()) {
+            exit_debt = it2->weight;
+            exit_node = it2->connection;
+
+            transfer_size = min(entry_debt, exit_debt);
+            new_entry_connection = {entry_node, transfer_size};
+            new_exit_connection = {exit_node, transfer_size};
+            /*
+            new_entry_connection.connection = entry_node;
+            new_entry_connection.weight = transfer_size;
+            new_exit_connection.connection = exit_node;
+            new_exit_connection.weight = transfer_size;
+            */
+            //economy.createConnection((Person*) entry_node, (Person*)exit_node, transfer_size);
+            entry_node->addExit(exit_node, transfer_size);
+            entry_node->diminishExitTo(this, transfer_size);
+            exit_node->addEntry(entry_node, transfer_size); //segfault: probably because of previous stuff (diminish entry and exit?)
+            exit_node->diminishEntryTo(this, transfer_size);
+
+            erased_entry = diminishConnectionWeight(it, transfer_size);
+            diminishConnectionWeight(it2, transfer_size);
+
+
+            if (erased_entry) {
+                break;
+            }
+
+        }
+
+
+        if (exits.size() == 0) { // We have run out of exits to which redirect debt
+            return;
+        }
+    }
+}
+
+bool Node::IsOneWayNode() {
+    return exits.size() == 0 || entries.size() == 0;
+}
+
 bool Node::diminishConnectionWeight(
         __gnu_cxx::__normal_iterator<Connection *, vector<Connection, allocator<Connection>>> connection,
         unsigned int to_diminish) {
@@ -156,4 +253,30 @@ bool Node::diminishConnectionWeight(
         }
     }
     return erased_connection;
+}
+
+void Node::diminishEntryTo(Node *n, unsigned int amount) {
+    for (auto it = entries.begin(); it != entries.end(); it++) {
+        if ((*it).connection == n) {
+            profit -= amount;
+            (*it).weight -= amount;
+            if((*it).weight == 0) {
+                entries.erase(it);
+            }
+            return;
+        }
+    }
+}
+
+void Node::diminishExitTo(Node *n, unsigned int amount) {
+    for (auto it = exits.begin(); it != exits.end(); it++) {
+        if ((*it).connection == n) {
+            debt -= amount;
+            (*it).weight -= amount;
+            if((*it).weight == 0) {
+                exits.erase(it);
+            }
+            return;
+        }
+    }
 }

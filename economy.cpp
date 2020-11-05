@@ -7,14 +7,17 @@ void Economy::info() {
     cout << getTrueConnections() << " true connections\n";
     cout << getDebt() << " debt\n";
     cout << getProfit() << " profit\n";
+    /*
     for (auto person: people) {
         person->info();
     }
+     */
 }
 
 void Economy::runEconomy() {
     mergeSameConnections();
     nulifyMutualDebt();
+    transposeDebt();
 }
 
 void Economy::createRandomEconomy(int size, int connection_size) {
@@ -113,4 +116,11 @@ void Economy::nulifyMutualDebt() {
 }
 
 void Economy::transposeDebt() {
+
+    bool succesfull = true;
+    for(auto it = people.begin(); it != people.end(); it++){
+        (*it)->turnToOneWayNode();
+        succesfull &= (*it)->IsOneWayNode();
+    }
+    std::cout << "Transposing debt: " << succesfull << '\n';
 }
