@@ -127,6 +127,14 @@ void test7(){
     economy.info();
 }
 
-int main() {
+void run(){
+    Economy economy;
+    economy.info();
+    economy.createRandomEconomy(POP_SIZE, CONNECTION_SIZE);
+    economy.info();
+}
+
+int main() {]
+    run();
     return 0;
 }
