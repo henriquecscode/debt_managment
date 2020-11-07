@@ -7,8 +7,8 @@
 using namespace std;
 
 
-const int POP_SIZE = 10;
-const int CONNECTION_SIZE = 90;
+const int POP_SIZE = 10000;
+const int CONNECTION_SIZE = 5000;
 
 string function(int i) {
 
@@ -129,12 +129,13 @@ void test7(){
 
 void run(){
     Economy economy;
-    economy.info();
     economy.createRandomEconomy(POP_SIZE, CONNECTION_SIZE);
+    economy.info();
+    economy.runEconomy();
     economy.info();
 }
 
-int main() {]
+int main() {
     run();
     return 0;
 }
