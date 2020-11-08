@@ -138,21 +138,22 @@ void run(){
 }
 
 void metaRun(){
-    fstream output;
+    ofstream output;
     output.open("results.txt");
     std::stringstream ss;
-    int initial_profit, final_profit, initial_connections, final_connections;
+    unsigned long long initial_profit, final_profit, initial_connections, final_connections;
     double ratio;
-    for(int i = 100; i < 1000000; i*=1.4){
+    for(double i = 100; i < 5000000; i*=1.4){
+        std::stringstream ss;
         Economy economy;
-        economy.createRandomEconomy(i, (int) i/2);
+        economy.createRandomEconomy((int)i, (int) i/2);
         initial_profit = economy.getProfit();
         initial_connections = economy.getTrueConnections();
         economy.runEconomy();
         final_profit = economy.getProfit();
         final_connections = economy.getTrueConnections();
-        ratio = final_profit / initial_profit;
-        ss << i << ' ' << initial_profit << ' ' << initial_connections << ' ' <<
+        ratio = (double) final_profit / initial_profit;
+        ss << (int)i << ' ' << initial_profit << ' ' << initial_connections << ' ' <<
         final_profit << ' ' << final_connections << ' ' <<ratio << '\n';
         std::cout <<ss.str();
         output << ss.str();
@@ -163,6 +164,8 @@ void metaRun(){
 int main() {
     srand(70);
     //run();
+    //TODO
+    //Make a function to remove nodes with no exits and no entries (size should remain the same)
     metaRun();
     return 0;
 }
