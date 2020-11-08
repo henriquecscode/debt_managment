@@ -122,7 +122,6 @@ void Economy::removeEmptyNodes() {
         if ((*it)->getNumberEntries() == 0 && (*it)->getNumberExits() == 0) {
             //Node is empty
             it = people.erase(it);
-            std::cout << "erased";
         } else {
             it++;
         }
