@@ -1,4 +1,7 @@
 #include "economy.h"
+#include "connection.h"
+#include "node.h"
+#include "person.h"
 #include "time.h"
 #include <fstream>
 #include <string>

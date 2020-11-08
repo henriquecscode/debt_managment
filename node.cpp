@@ -1,5 +1,6 @@
-#include "graph.h"
 #include "economy.h"
+#include "connection.h"
+#include "node.h"
 
 using namespace std;
 
@@ -96,12 +97,21 @@ int Node::getNetProfit() const {
     return profit - debt;
 }
 
+int Node::getNumberEntries() const {
+    return entries.size();
+}
+
 int Node::getNumberExits() const {
     return exits.size();
 }
 
-int Node::getNumberEntries() const {
-    return entries.size();
+
+__gnu_cxx::__normal_iterator<Connection *, vector<Connection, allocator<Connection>>>
+Node::getEntryConnectionToNode(Node *node) {
+    //https://stackoverflow.com/a/15518039
+
+    return find_if(entries.begin(), entries.end(),
+                   [node](const Connection &entry_connection) { return entry_connection.connection == node; });
 }
 
 __gnu_cxx::__normal_iterator<Connection *, vector<Connection, allocator<Connection>>>
@@ -112,14 +122,17 @@ Node::getExitConnectionToNode(Node *node) {
                    [node](const Connection &exit_connection) { return exit_connection.connection == node; });
 }
 
-__gnu_cxx::__normal_iterator<Connection *, vector<Connection, allocator<Connection>>>
-Node::getEntryConnectionToNode(Node *node) {
-    //https://stackoverflow.com/a/15518039
-
-    return find_if(entries.begin(), entries.end(),
-                   [node](const Connection &entry_connection) { return entry_connection.connection == node; });
+void Node::mergeSameEntries() {
+    for (auto it = entries.begin(); it != entries.end(); it++) {
+        for (auto it2 = entries.begin(); it2 != entries.end(); it2++) {
+            if ((*it2).connection == (*it).connection && it != it2) { //We can merge an exit
+                (*it).weight += (*it2).weight;
+                entries.erase(it2);
+                it2 -= 1;
+            }
+        }
+    }
 }
-
 
 void Node::mergeSameExits() {
     for (auto it = exits.begin(); it != exits.end(); it++) {
@@ -127,18 +140,6 @@ void Node::mergeSameExits() {
             if ((*it2).connection == (*it).connection && it != it2) { //We can merge an exit
                 (*it).weight += (*it2).weight;
                 exits.erase(it2);
-                it2 -= 1;
-            }
-        }
-    }
-}
-
-void Node::mergeSameEntries() {
-    for (auto it = entries.begin(); it != entries.end(); it++) {
-        for (auto it2 = entries.begin(); it2 != entries.end(); it2++) {
-            if ((*it2).connection == (*it).connection && it != it2) { //We can merge an exit
-                (*it).weight += (*it2).weight;
-                entries.erase(it2);
                 it2 -= 1;
             }
         }
@@ -201,7 +202,7 @@ void Node::turnToOneWayNode() {
             entry_node->addExit(exit_node, transfer_size);
             entry_node->diminishExitTo(this, transfer_size);
             exit_node->addEntry(entry_node, transfer_size); //segfault: probably because of previous stuff (diminish entry and exit?)
-            exit_node->diminishEntryTo(this, transfer_size);
+            exit_node->diminishEntryFrom(this, transfer_size);
 
             erased_entry = diminishConnectionWeight(it, transfer_size);
             diminishConnectionWeight(it2, transfer_size);
@@ -256,9 +257,9 @@ bool Node::diminishConnectionWeight(
     return erased_connection;
 }
 
-void Node::diminishEntryTo(Node *n, unsigned int amount) {
+void Node::diminishEntryFrom(Node *node, unsigned int amount) {
     for (auto it = entries.begin(); it != entries.end(); it++) {
-        if ((*it).connection == n) {
+        if ((*it).connection == node) {
             profit -= amount;
             (*it).weight -= amount;
             if((*it).weight == 0) {
@@ -269,9 +270,9 @@ void Node::diminishEntryTo(Node *n, unsigned int amount) {
     }
 }
 
-void Node::diminishExitTo(Node *n, unsigned int amount) {
+void Node::diminishExitTo(Node *node, unsigned int amount) {
     for (auto it = exits.begin(); it != exits.end(); it++) {
-        if ((*it).connection == n) {
+        if ((*it).connection == node) {
             debt -= amount;
             (*it).weight -= amount;
             if((*it).weight == 0) {

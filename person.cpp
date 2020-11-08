@@ -1,3 +1,4 @@
+#include "node.h"
 #include "person.h"
 
 unsigned int Person::person_number = 0;
