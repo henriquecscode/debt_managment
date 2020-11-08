@@ -1,4 +1,0 @@
-test mergeSameConnections and nulifyMutualDebt by creating an economy manually, that is, creating the people and the amounts owned manually
-
-assuming the functions are working fine:
-    run the economy with random parameteres to see if the total debt diminishes
