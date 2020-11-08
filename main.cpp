@@ -164,8 +164,6 @@ void metaRun(){
 int main() {
     srand(70);
     //run();
-    //TODO
-    //Make a function to remove nodes with no exits and no entries (size should remain the same)
     metaRun();
     return 0;
 }

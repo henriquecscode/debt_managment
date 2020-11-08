@@ -26,6 +26,7 @@ void Economy::runEconomy() {
 void Economy::createRandomEconomy(int size, int connection_size) {
     createPeople(size);
     createRandomConnections(connection_size);
+    removeEmptyNodes();
 }
 
 void Economy::createPeople(int size) {
@@ -69,10 +70,23 @@ void Economy::createConnection(Person *p1, Person *p2, unsigned int money) {
 unsigned int Economy::createRandomMoneySize() {
     unsigned int number1, number2;
 
-    number1 = (rand() % 1000) + 10;
-    number2 = (rand() % 1000) + 10;
+    number1 = (rand() % 100) + 1;
+    number2 = (rand() % 100) + 1;
 
     return number1 * number2; // Money between 100 and 1009 * 1009
+}
+
+void Economy::removeEmptyNodes() {
+    for(auto it = people.begin(); it != people.end();){
+        if((*it)->getNumberEntries() == 0 && (*it)->getNumberExits() == 0){
+            //Node is empty
+            it = people.erase(it);
+            std::cout << "erased";
+        }
+        else{
+            it++;
+        }
+    }
 }
 
 unsigned int Economy::getTrueConnections() const {
@@ -93,16 +107,16 @@ unsigned int Economy::getTrueConnections() const {
 
 }
 
-unsigned int Economy::getDebt() const {
-    unsigned int debt = 0;
+unsigned long long int Economy::getDebt() const {
+    unsigned long long debt = 0;
     for (auto person: people) {
         debt += person->getDebt();
     }
     return debt;
 }
 
-unsigned int Economy::getProfit() const {
-    unsigned int profit = 0;
+unsigned long long int Economy::getProfit() const {
+    unsigned long long profit = 0;
     for (auto person: people) {
         profit += person->getProfit();
     }
@@ -139,5 +153,4 @@ void Economy::transposeDebt() {
         }
          */
     }
-    std::cout << "Transposing debt: " << succesfull << '\n';
 }

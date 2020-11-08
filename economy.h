@@ -24,9 +24,9 @@ public:
 
     unsigned int getTrueConnections() const;
 
-    unsigned int getDebt() const;
+    unsigned long long int getDebt() const;
 
-    unsigned int getProfit() const;
+    unsigned long long int getProfit() const;
 
     Person *getRandomPerson() const;
 
@@ -37,6 +37,8 @@ private:
     void createRandomConnections(int connection_size);
 
     static unsigned int createRandomMoneySize() ;
+
+    void removeEmptyNodes();
 
     void mergeSameConnections();
 
