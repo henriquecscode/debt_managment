@@ -1,14 +1,16 @@
+#include "economy.h"
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <time.h>
 #include <stdlib.h>
-#include "economy.h"
 
 using namespace std;
 
 
-const int POP_SIZE = 10000;
-const int CONNECTION_SIZE = 5000;
+const int POP_SIZE = 2000000;
+const int CONNECTION_SIZE = 1000000;
 
 string function(int i) {
 
@@ -135,7 +137,32 @@ void run(){
     economy.info();
 }
 
+void metaRun(){
+    fstream output;
+    output.open("results.txt");
+    std::stringstream ss;
+    int initial_profit, final_profit, initial_connections, final_connections;
+    double ratio;
+    for(int i = 100; i < 1000000; i*=1.4){
+        Economy economy;
+        economy.createRandomEconomy(i, (int) i/2);
+        initial_profit = economy.getProfit();
+        initial_connections = economy.getTrueConnections();
+        economy.runEconomy();
+        final_profit = economy.getProfit();
+        final_connections = economy.getTrueConnections();
+        ratio = final_profit / initial_profit;
+        ss << i << ' ' << initial_profit << ' ' << initial_connections << ' ' <<
+        final_profit << ' ' << final_connections << ' ' <<ratio << '\n';
+        std::cout <<ss.str();
+        output << ss.str();
+
+    }
+}
+
 int main() {
-    run();
+    srand(70);
+    //run();
+    metaRun();
     return 0;
 }

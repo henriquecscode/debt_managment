@@ -1,4 +1,7 @@
 #include "economy.h"
+#include "time.h"
+#include <fstream>
+#include <string>
 
 void Economy::info() {
     cout << "\n\n";
@@ -73,12 +76,21 @@ unsigned int Economy::createRandomMoneySize() {
 }
 
 unsigned int Economy::getTrueConnections() const {
-    unsigned int connections = 0;
+    //static int run = 0;
+    //std::ofstream file; //Debug
+    //file.open(to_string(time(NULL)) +' ' + to_string(run)+ ".txt"); //Debug
+    unsigned int connections = 0, entries, exits;
     for (auto person: people) {
-        connections += person->getNumberExits();
-        connections += person->getNumberEntries();
+        entries = person->getNumberEntries();
+        exits = person->getNumberExits();
+        //file << person << ' ' << person->getProfit() << ' ' << person->getDebt() << ' ' << entries << ' ' << exits << '\n';
+        connections += entries + exits;
     }
-    return connections / 2;
+    //file << connections << '\n';
+    //run += 1;
+
+    return connections;
+
 }
 
 unsigned int Economy::getDebt() const {
@@ -121,6 +133,11 @@ void Economy::transposeDebt() {
     for(auto it = people.begin(); it != people.end(); it++){
         (*it)->turnToOneWayNode();
         succesfull &= (*it)->IsOneWayNode();
+        /*
+        if(getDebt() != getProfit()){
+            std::cout << it - people.begin() << '\n' ;
+        }
+         */
     }
     std::cout << "Transposing debt: " << succesfull << '\n';
 }
