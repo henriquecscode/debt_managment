@@ -29,33 +29,6 @@ void Economy::createRandomEconomy(int size, int connection_size) {
     removeEmptyNodes();
 }
 
-void Economy::createPeople(int size) {
-    for (int i = 0; i < size; i++) {
-        createPerson();
-    }
-}
-
-Person *Economy::createPerson() {
-    Person *p = new Person();
-    people.push_back(p);
-    size += 1;
-    return p;
-}
-
-void Economy::createRandomConnections(int connection_size) {
-    for (int i = 0; i < connection_size; i++) {
-        Person *p1 = getRandomPerson();
-        Person *p2;
-        do {
-            p2 = getRandomPerson();
-        } while (p2 == p1);
-        unsigned int money = createRandomMoneySize();
-
-        createConnection(p1, p2, money);
-
-    }
-}
-
 void Economy::createConnection(Person *p1, Person *p2, unsigned int money) {
     Connection p1top2 = {p2, money};
     Connection p2fromp1 = {p1, money};
@@ -67,26 +40,11 @@ void Economy::createConnection(Person *p1, Person *p2, unsigned int money) {
     connection_size += 1;
 }
 
-unsigned int Economy::createRandomMoneySize() {
-    unsigned int number1, number2;
-
-    number1 = (rand() % 100) + 1;
-    number2 = (rand() % 100) + 1;
-
-    return number1 * number2; // Money between 100 and 1009 * 1009
-}
-
-void Economy::removeEmptyNodes() {
-    for(auto it = people.begin(); it != people.end();){
-        if((*it)->getNumberEntries() == 0 && (*it)->getNumberExits() == 0){
-            //Node is empty
-            it = people.erase(it);
-            std::cout << "erased";
-        }
-        else{
-            it++;
-        }
-    }
+Person *Economy::createPerson() {
+    Person *p = new Person();
+    people.push_back(p);
+    size += 1;
+    return p;
 }
 
 unsigned int Economy::getTrueConnections() const {
@@ -127,6 +85,50 @@ Person *Economy::getRandomPerson() const {
     return people[rand() % size];
 }
 
+
+void Economy::createPeople(int size) {
+    for (int i = 0; i < size; i++) {
+        createPerson();
+    }
+}
+
+
+void Economy::createRandomConnections(int connection_size) {
+    for (int i = 0; i < connection_size; i++) {
+        Person *p1 = getRandomPerson();
+        Person *p2;
+        do {
+            p2 = getRandomPerson();
+        } while (p2 == p1);
+        unsigned int money = createRandomMoneySize();
+
+        createConnection(p1, p2, money);
+
+    }
+}
+
+
+unsigned int Economy::createRandomMoneySize() {
+    unsigned int number1, number2;
+
+    number1 = (rand() % 100) + 1;
+    number2 = (rand() % 100) + 1;
+
+    return number1 * number2; // Money between 100 and 1009 * 1009
+}
+
+void Economy::removeEmptyNodes() {
+    for (auto it = people.begin(); it != people.end();) {
+        if ((*it)->getNumberEntries() == 0 && (*it)->getNumberExits() == 0) {
+            //Node is empty
+            it = people.erase(it);
+            std::cout << "erased";
+        } else {
+            it++;
+        }
+    }
+}
+
 void Economy::mergeSameConnections() {
 
     for (auto person: people) {
@@ -144,7 +146,7 @@ void Economy::nulifyMutualDebt() {
 void Economy::transposeDebt() {
 
     bool succesfull = true;
-    for(auto it = people.begin(); it != people.end(); it++){
+    for (auto it = people.begin(); it != people.end(); it++) {
         (*it)->turnToOneWayNode();
         succesfull &= (*it)->IsOneWayNode();
         /*
