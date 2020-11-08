@@ -156,7 +156,7 @@ void Node::nulifyMutualDebt() {
 
             auto others_exit_connection = other_node->getExitConnectionToNode(this);
             auto others_entry_connection = other_node->getEntryConnectionToNode(this);
-            unsigned int weight_to_change = min(it->weight, others_exit_connection->weight);
+            unsigned int weight_to_change = std::min(it->weight, others_exit_connection->weight);
             bool erased_iterator = false;
 
 
@@ -181,13 +181,14 @@ void Node::turnToOneWayNode() {
     bool erased_entry;
     Connection new_entry_connection, new_exit_connection;
     for (auto it = entries.begin(); it != entries.end(); it = entries.begin()) {
-        entry_debt = it->weight;
         entry_node = it->connection;
-        for (auto it2 = exits.begin(); it2 != exits.end(); it2 = exits.begin()) {
+        for (auto it2 = exits.begin(); it2 != exits.end(); it2 = exits.begin()){
+
+            entry_debt = it->weight;
             exit_debt = it2->weight;
             exit_node = it2->connection;
 
-            transfer_size = min(entry_debt, exit_debt);
+            transfer_size = std::min(entry_debt, exit_debt);
             new_entry_connection = {entry_node, transfer_size};
             new_exit_connection = {exit_node, transfer_size};
             /*
